@@ -25,7 +25,7 @@ app.set('views', 'views');
 app.use(morgan('short'));
 
 // Mongo URI
-const mongoURI = 'mongodb://localhost:27017/mongouploads' || process.env.MONGODB_URL;
+const mongoURI = process.env.MONGODB_URL || 'mongodb://localhost:27017/mongouploads';
 
 //init gfs
 let gfs;
@@ -122,7 +122,7 @@ app.use('/files', files)
 const folders = require('./router/folders');
 app.use('/folders', folders);
 
-const port = 2000 || process.env.PORT;
+const port = process.env.PORT || 2000;
 
 app.listen(port, () => {
     console.log('Server running')

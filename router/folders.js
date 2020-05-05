@@ -44,7 +44,7 @@ db.once('open', () => {
     gfs.collection('uploads');
 });
 
-const mongoURI = 'mongodb://localhost:27017/mongouploads' || process.env.MONGODB_URL;
+const mongoURI = process.env.MONGODB_URL || 'mongodb://localhost:27017/mongouploads';
 
 // Create storage engine
 const storage = new GridFsStorage({
