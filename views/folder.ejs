@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <style>
+        img {
+            width: 100%;
+        }
+    </style>
+    <title>Home</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center display-4 my-4"><a href="/home/<%= userId %>">Home File</a>/<%= foldername %></h1>
+        <div class="row">
+            <div class=".col-md-8 m-auto" style="width: 70%;">
+                <form action="/folders/upload/<%= userId %>/<%= foldername %>" method="POST" enctype="multipart/form-data">
+                    <div class="custom-file mb-3">
+                        <input type="file" name="file" id="file" class="custom-file-input" multiple>
+                        <label for="file" id="fileTxt" class="custom-file-label">Choose File</label>
+                    </div>
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block">
+                </form>
+                <hr>
+                <% if(files){ %>
+                    <% files.forEach(function(file) { %>
+                            <div class="card card-body mb-3">
+                                <% if(file.isImage) { %>
+                                    <a href="/files/image/<%= file.filename %>"><img src="/files/image/<%= file.filename %>" alt=""></a>
+                                <% } else { %>
+                                    <a href="/files/<%= file.filename %>"><%= file.filename %></a>
+                                <% } %>
+                                <a href="/files/<%= file.filename %>" class="btn btn-primary mt-4" download> download</a>
+                                <form action="/files/<%= file.filename %>/<%= userId %>?_method=DELETE" method="POST">
+                                    <button class="btn btn-danger btn-block mt-4">Delete</button>
+                                </form>
+                            </div>
+                    <% }) %>
+                <% } else { %>
+                    <p>No Files to show</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+<script src="/js/index.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>
