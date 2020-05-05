@@ -15,10 +15,6 @@ router.get("/", (req, res) => {
 // @route POST /signin
 // @desc create user
 router.post('/', (req, res)=> {
-    console.log({
-        username: req.body.username,
-        name: req.body.name
-    })
     if (req.body.username && req.body.name && req.body.firstname && req.body.email && req.body.password != null) {   
         User.findOne({ email : req.body.email }, (err, user)=> {
             if(err){
