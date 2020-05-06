@@ -7,6 +7,7 @@ try:
     os.system('git commit -m "Deploy"')
     os.system('git push origin master')
     print('succeeded')
+    os.system('nodemon')
 
 except:
     print('deploy')
