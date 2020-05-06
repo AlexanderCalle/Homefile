@@ -16,16 +16,66 @@
         <h1 class="text-center display-4 my-4">Home Files</h1>
         <div class="row">
             <div class="col-md-4">
-                <form action="/folders/<%= userId %>/mkdir" method="POST">
-                    <div class="form-group" style="width: 70%;">
-                        <input type="text" placeholder="Create folder" name="folder" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Create</button>
-                </form>
                 <hr style="width: 70%; margin-left: 0;">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary btn-block mt-4" style="width: 70%;" data-toggle="modal" data-target="#exampleModalCenter">Add File(s)</button>
+                <button type="button" class="btn btn-primary btn-block" style="width: 70%;" data-toggle="modal" data-target=".bd-example-modal-sm">Create folder</button>
+                
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Add File(s)</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="/upload/<%= userId %>" method="POST" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <div class="custom-file mb-3">
+                                        <input type="file" name="file" id="file" class="custom-file-input" multiple>
+                                        <label for="file" id="fileTxt" class="custom-file-label">Choose File(s)</label>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Add File(s)</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Button trigger modal -->
+                
+                <!-- Modal -->
+                <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Create Folder</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form action="/folders/<%= userId %>/mkdir" method="POST">
+                                <div class="modal-body">
+                                    <div class="form-group" style="width: 70%;">
+                                        <input type="text" placeholder="Create folder" name="folder" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Create folder</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <% if(folders) { %>
                     <div class="card card-body mt-4" style="width: 70%;">
-                        <p style="text-decoration: underline;">Folders</p>
+                        <p style="text-decoration: underline; font-size: 18px;">Folders :</p>
                         <% folders.forEach(function(folder) { %>
                                 <a class="mb-2" href="/folders/<%= userId %>/folder/<%= folder.foldername %>" style="font-size: 18px;"><%= folder.foldername %></a>
                                 <form action="/folders/<%= userId %>/<%= folder.foldername %>?_method=DELETE" method="POST">
@@ -38,13 +88,6 @@
                 <% } %>
             </div>
             <div class="col-md-8" style="width: 70%;">
-                <form action="/upload/<%= userId %>" method="POST" enctype="multipart/form-data">
-                    <div class="custom-file mb-3">
-                        <input type="file" name="file" id="file" class="custom-file-input" multiple>
-                        <label for="file" id="fileTxt" class="custom-file-label">Choose File</label>
-                    </div>
-                    <input type="submit" value="Submit" class="btn btn-primary btn-block">
-                </form>
                 <hr>
                 <% if(files){ %>
                     <% files.forEach(function(file) { %>
