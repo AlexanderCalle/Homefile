@@ -23,6 +23,32 @@ router.post('/:id/mkdir', (req, res) => {
     res.redirect(`/home/${req.params.id}`)
 });
 
+router.get('/:id/rename/:folderid', (req, res)=> {
+    User.findOne({ _id : req.params.id }, (err, user)=> {
+        if(err) return console.log(err);
+        if(user) {
+            Folder.findOne({ _id : req.params.folderid }, (err, folder)=> {
+                res.render('rename', {
+                    userId : req.params.id,
+                    folderId: req.params.folderid
+                })
+            })
+        }
+    })
+});
+
+router.post('/:id/rename/:folderid', (req, res) => {
+    Folder.updateOne({ _id : req.params.folderid }, 
+        { $set: { foldername: req.body.folder}}, {new: true}, (err, folder)=> {
+            if(err){
+                res.send(err)
+            }
+            console.log('foldername updated')
+            res.redirect(`/home/${req.params.id}`)
+        }
+    )
+});
+
 router.delete('/:id/:foldername', (req, res)=> {
     var foldername = req.params.foldername
     gfs.files.remove({"metadata.folder": foldername}, (err) => {

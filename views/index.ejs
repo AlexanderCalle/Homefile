@@ -8,6 +8,14 @@
         img {
             width: 100%;
         }
+        .test:after {
+            position: relative;
+            left: 100%;
+            margin-top: 0px;
+            content: '\2807';
+            font-size: 20px;
+            cursor: pointer;
+        }
     </style>
     <title>Home</title>
 </head>
@@ -50,7 +58,7 @@
                     <!-- Button trigger modal -->
                 
                 <!-- Modal -->
-                <div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+                <div class="modal fade bd-example-modal-sm"  tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -61,7 +69,7 @@
                             </div>
                             <form action="/folders/<%= userId %>/mkdir" method="POST">
                                 <div class="modal-body">
-                                    <div class="form-group" style="width: 70%;">
+                                    <div class="form-group">
                                         <input type="text" placeholder="Create folder" name="folder" class="form-control">
                                     </div>
                                 </div>
@@ -73,14 +81,26 @@
                         </div>
                     </div>
                 </div>
+
+                
                 <% if(folders) { %>
                     <div class="card card-body mt-4" style="width: 70%;">
                         <p style="text-decoration: underline; font-size: 18px;">Folders :</p>
                         <% folders.forEach(function(folder) { %>
-                                <a class="mb-2" href="/folders/<%= userId %>/folder/<%= folder.foldername %>" style="font-size: 18px;"><%= folder.foldername %></a>
-                                <form action="/folders/<%= userId %>/<%= folder.foldername %>?_method=DELETE" method="POST">
-                                    <button class="btn btn-danger btn-block mb-3">Delete</button>
-                                </form>
+                                <div class="mb-4" style="width: 70%;">
+                                    <a href="/folders/<%= userId %>/folder/<%= folder.foldername %>" style="font-size: 18px;"><%= folder.foldername %></a>
+                                    <div class="btn-group">
+                                        <div class="test" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">     
+                                        </div>
+                                        <div class="dropdown-menu">
+                                            <a href="/folders/<%= userId %>/rename/<%= folder._id %>" class="dropdown-item">Rename</a>
+                                            <div class="dropdown-divider"></div>
+                                            <form action="/folders/<%= userId %>/<%= folder.foldername %>?_method=DELETE" method="POST">
+                                                <button class="dropdown-item">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                         <% }) %>
                     </div>
                 <% } else { %>
