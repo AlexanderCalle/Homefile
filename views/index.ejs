@@ -16,6 +16,16 @@
             font-size: 20px;
             cursor: pointer;
         }
+        .dots {
+            margin-left: 97%;
+        }
+        .dots:after {
+            position: absolute;
+            top: -35px;
+            content: '\2807';
+            font-size: 20px;
+            cursor: pointer;
+        }
     </style>
     <title>Home</title>
 </head>
@@ -117,7 +127,20 @@
                                 <% } else { %>
                                     <a href="/files/<%= file.filename %>"><%= file.filename %></a>
                                 <% } %>
-                                <a href="/files/<%= file.filename %>" class="btn btn-primary mt-4" download> download</a>
+                                <a href="/files/<%= file.filename %>" style="width: 95%;" class="btn btn-primary mt-4" download> download</a>
+                                <div class="btn-group">
+                                    <div class="dots" data-toggle="dropdown"  aria-haspopup="true" aria-expanded="false">     
+                                    </div>
+                                    <div class="dropdown-menu">
+                                        <p class="dropdown-item">Move File</p>
+                                        <div class="dropdown-divider"></div>   
+                                        <% folders.forEach(function(folder) { %>
+                                            <form action="/folders/move/<%= userId %>/<%= folder.foldername %>/<%= file.filename %>?_method=POST" method="post">
+                                                <button class="dropdown-item"><%= folder.foldername %></button>
+                                            </form>
+                                        <% }) %>                                 
+                                    </div>
+                                </div>
                                 <form action="/files/<%= file.filename %>/<%= userId %>?_method=DELETE" method="POST">
                                     <button class="btn btn-danger btn-block mt-4">Delete</button>
                                 </form>

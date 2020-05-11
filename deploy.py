@@ -10,4 +10,4 @@ try:
     os.system('nodemon')
 
 except:
-    print('deploy')
+    print('succeeded')

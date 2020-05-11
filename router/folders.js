@@ -19,7 +19,6 @@ router.post('/:id/mkdir', (req, res) => {
     folder.UserId = req.params.id;
 
     folder.save()
-    console.log('folder created');
     res.redirect(`/home/${req.params.id}`)
 });
 
@@ -43,7 +42,6 @@ router.post('/:id/rename/:folderid', (req, res) => {
             if(err){
                 res.send(err)
             }
-            console.log('foldername updated')
             res.redirect(`/home/${req.params.id}`)
         }
     )
@@ -119,5 +117,17 @@ router.get('/:id/folder/:foldername', (req, res)=> {
         }
     })
 });
+
+router.post('/move/:id/:foldername/:filename', (req, res)=> {
+    gfs.files.findOne({ filename: req.params.filename }, (err, file)=> {
+        if(err) return console.log(err)
+        if(file) {
+            gfs.files.update({filename: req.params.filename} ,{ $set: { "metadata.folder": req.params.foldername}}, {new: true}, (err, file)=> {
+                if(err) return console.log(err);
+                if(file) return res.redirect(`/home/${req.params.id}`)
+            })
+        }
+    })
+})
 
 module.exports = router;

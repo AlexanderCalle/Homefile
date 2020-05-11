@@ -43,7 +43,6 @@ router.post('/', (req, res)=> {
                         user.password = hash;
 
                     user.save();
-                    console.log('user saved!');
                     res.redirect(`/home/${user._id}`)
                     }
                 })
