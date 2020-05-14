@@ -1,15 +1,8 @@
 const express = require('express');
 const router = express.Router()
-const bodyParser = require('body-parser');
-const path = require('path');
 const mongoose = require('mongoose');
-const multer = require('multer');
-const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
-const methodOverride = require('method-override');
 const db = require('../db');
-const User = require('../users/users');
-const Folder = require('../folders/folders');
 
 let gfs;
 db.once('open', () => {
@@ -21,12 +14,12 @@ db.once('open', () => {
 // @route GET /files
 // @desc Display all files in JSON
 router.get('/', (req, res) => {
+    let errors = [];
     gfs.files.find().toArray((err, files) => {
         // check if files
         if (!files || files.length === 0) {
-            return res.status(404).json({
-                err: 'No files exists'
-            });
+            errors.push({msg: 'Not files exists'})
+            res.render('error', {errors})
         }
 
         //Files exists
@@ -37,14 +30,14 @@ router.get('/', (req, res) => {
 // @route GET /files/:filename
 // @desc Display file in JSON
 router.get('/:filename', (req, res) => {
+    let errors = []
     gfs.files.findOne({filename: req.params.filename}, (err, file) => {
         // check if file
         if(!file || file.length === 0) {
-            res.status(404).json({
-                err: 'No file exist'
-            });
+            errors.push({msg: 'Not such file'})
+            res.render('error', {errors})
         }
-
+        
         const readstream = gfs.createReadStream(file.filename);
         readstream.pipe(res)
     });
@@ -53,6 +46,7 @@ router.get('/:filename', (req, res) => {
 // @route GET /image/:filename
 // @desc Display image
 router.get('/image/:filename', (req, res) => {
+    let errors = []
     gfs.files.findOne({filename: req.params.filename}, (err, file) => {
         // check if file
         if(!file || file.length === 0) {
@@ -67,9 +61,8 @@ router.get('/image/:filename', (req, res) => {
             const readstream = gfs.createReadStream(file.filename);
             readstream.pipe(res)
         } else {
-            res.status(404).json({
-                err: 'Not an image'
-            });
+            errors.push({msg: 'Not a image'})
+            res.render('error', {errors})
         }
     });
 });

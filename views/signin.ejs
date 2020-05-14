@@ -11,8 +11,9 @@
     <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
-            <form action="/signin" method="POST">
+            <form action="/user/signin" method="POST">
                 <h1 class="text-center display-4 my-4">Signin</h1>
+                <% include ./partials/messages %>
                 <div class="form-group">
                     <input type="text" name="username" placeholder="Username" class="form-control">
                     <br>

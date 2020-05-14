@@ -1,16 +1,13 @@
 const express = require('express');
 const router = express.Router();
-const Folder = require('../folders/folders');
-const bodyParser = require('body-parser');
-const path = require('path');
+const Folder = require('../models/folders');
 const mongoose = require('mongoose');
 const multer = require('multer');
 const GridFsStorage = require('multer-gridfs-storage');
 const Grid = require('gridfs-stream');
-const methodOverride = require('method-override');
-const bcrypt = require('bcryptjs');
 const db = require('../db');
-const User = require('../users/users');
+const User = require('../models/users');
+const flash = require('connect-flash');
 
 router.post('/:id/mkdir', (req, res) => {
     var folder = new Folder();
@@ -39,24 +36,21 @@ router.get('/:id/rename/:folderid', (req, res)=> {
 router.post('/:id/rename/:folderid', (req, res) => {
     Folder.updateOne({ _id : req.params.folderid }, 
         { $set: { foldername: req.body.folder}}, {new: true}, (err, folder)=> {
-            if(err){
-                res.send(err)
-            }
-            res.redirect(`/home/${req.params.id}`)
+            if(err) return req.flash({error_msg: 'Oops! Something went wrong'});
+
+            res.redirect(`/home/${req.params.id}`);
         }
-    )
+    );
 });
 
 router.delete('/:id/:foldername', (req, res)=> {
     var foldername = req.params.foldername
     gfs.files.remove({"metadata.folder": foldername}, (err) => {
-        if(err) {
-            return res.status(404).json({ err : err});
-        }
+        if(err) return req.flash({error_msg: 'Oops! Something went wrong'});
 
         Folder.findOneAndRemove({foldername: req.params.foldername}, (err, folder)=> {
             if(err) return console.log(err);
-            res.redirect(`/home/${req.params.id}`)
+            res.redirect(`/home/${req.params.id}`);
         });
     });
 });
@@ -96,10 +90,11 @@ router.post('/upload/:id/:foldername', upload.array('file'), (req, res) => {
 
 router.get('/:id/folder/:foldername', (req, res)=> {
     User.findOne({ _id: req.params.id}, (err, user)=> {
-        if(err) return res.send(err)
+        if(err) return req.flash({error_msg: 'Oops! Something went wrong'});
         if(user) {
             gfs.files.find({"metadata.user_id": req.params.id, "metadata.folder": req.params.foldername}).toArray((err, files) => {
                 Folder.find({UserId: req.params.id}, (err, folders) => {
+                    if(err) return req.flash({error_msg: 'Oops! Something went wrong'});
                     if (!files || files.length === 0) {
                         res.render('folder', {files: false, userId: req.params.id, foldername: req.params.foldername});
                     } else {
@@ -115,19 +110,19 @@ router.get('/:id/folder/:foldername', (req, res)=> {
                 });
             });
         }
-    })
+    });
 });
 
 router.post('/move/:id/:foldername/:filename', (req, res)=> {
     gfs.files.findOne({ filename: req.params.filename }, (err, file)=> {
-        if(err) return console.log(err)
+        if(err) return req.flash({error_msg: 'Oops! Something went wrong'});
         if(file) {
             gfs.files.update({filename: req.params.filename} ,{ $set: { "metadata.folder": req.params.foldername}}, {new: true}, (err, file)=> {
                 if(err) return console.log(err);
-                if(file) return res.redirect(`/home/${req.params.id}`)
-            })
+                if(file) return res.redirect(`/home/${req.params.id}`);
+            });
         }
-    })
+    });
 })
 
 module.exports = router;

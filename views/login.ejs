@@ -11,8 +11,9 @@
     <div class="row">
         <div class="col-4"></div>
         <div class="col-4">
-            <form action="/" method="POST">
+            <form action="/user/login" method="POST">
                 <h1 class="text-center display-4 my-4">Login</h1>
+                <%- include('./partials/messages.ejs') %>
                 <div class="form-group">
                     <input type="email" name="email" placeholder="E-mail" class="form-control">
                     <br>
@@ -22,7 +23,7 @@
                 
             </form>
             <br>
-            <a href="/signin" class="mt-4">Signin</a>
+            <a href="/user/signin" class="mt-4">Signin</a>
         </div>
         <div class="col-4"></div>
     </div>
